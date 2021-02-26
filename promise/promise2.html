@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비동기 처리 학습 2</title>
+    <script src="common.js"></script>
+</head>
+<script>
+    var ctx = document.getElementsByTagName("body")
+    window.onload = function(){
+        getGyub()
+        getAsyncGyub()
+    }
+
+    function getUser(){
+        return new Promise(function(resolve, reject){
+            setTimeout( function(){
+                resolve({name : 'Gyub', age : 28})
+            }, 2000)
+        })
+    }
+    function getPhone(){
+        return new Promise(function(resolve, reject){
+            setTimeout( function(){
+                resolve("Galaxy 10e")
+            }, 3000)
+        })
+    }
+
+    function getGyub(){
+        var user = getUser()
+            .then(function(result){
+                console.log("getGyub_"+result)
+            });
+        ctx[0].append(write(user)) // [1,2,3]
+        if( user.name == "Gyub" ){
+            var phone = getPhone();
+            ctx[0].append(write(phone)); // [1,2,3]
+        }
+    }
+
+    async function getAsyncGyub(){
+        var user = await getUser();
+        ctx[0].append(write(`이름 : ${user.name}, 나이 : ${user.age}`)); // [1,2,3]
+        if( user.name == "Gyub" ){
+            var phone = await getPhone();
+            ctx[0].append(write(`핸드폰 종류 : ${phone}`)); // [1,2,3]
+        }
+    }
+</script>
+<body>
+    <h3>async & await</h3>
+</body>
+</html>
